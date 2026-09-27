@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Weedo F192 - Guía rápida</title>
+<style>
+  @page { size: A4; margin: 13mm 14mm 12mm 14mm; }
+  :root { --ink: #151515; --soft: #555; --line: #c9c9c9; --accent: #0b5cad; --warn: #b3261e; --band: #eef3f9; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: #fff; color: var(--ink); }
+  body { font-family: "Segoe UI", Arial, sans-serif; font-size: 10.9pt; line-height: 1.34; }
+  .page { page-break-after: always; }
+  .page:last-child { page-break-after: auto; }
+  header { display: grid; grid-template-columns: 1fr 48mm; gap: 6mm; align-items: start; border-bottom: 2.2pt solid var(--ink); padding-bottom: 4mm; margin-bottom: 4.5mm; }
+  h1 { font-size: 22pt; line-height: 1.05; margin: 0 0 1.5mm 0; letter-spacing: -0.3pt; }
+  .sub { color: var(--soft); font-size: 10.5pt; margin: 0; }
+  .qr { text-align: center; }
+  .qr img { width: 40mm; height: 40mm; display: block; margin: 0 auto 1mm auto; }
+  .qr .url { font-size: 8.4pt; font-weight: 700; white-space: nowrap; }
+  .qr .cap { font-size: 7.6pt; color: var(--soft); }
+  h2 { font-size: 12.5pt; margin: 4.2mm 0 1.8mm 0; padding-bottom: 0.8mm; border-bottom: 0.8pt solid var(--line); }
+  .rules { background: var(--band); border-left: 3pt solid var(--accent); padding: 2.6mm 3.6mm; margin: 0; }
+  .rules ol { margin: 0; padding-left: 5mm; }
+  .rules li { margin: 0.6mm 0; }
+  ol.steps { margin: 0; padding-left: 6mm; }
+  ol.steps > li { margin: 1.1mm 0; }
+  b.k { font-weight: 700; }
+  code { font-family: Consolas, "Courier New", monospace; font-size: 9.4pt; background: #f2f2f2; padding: 0 1mm; border-radius: 1mm; }
+  table { width: 100%; border-collapse: collapse; font-size: 9.6pt; }
+  th, td { text-align: left; vertical-align: top; padding: 1.3mm 2mm; border-bottom: 0.6pt solid var(--line); }
+  th { font-weight: 700; background: #f4f4f4; border-bottom: 1pt solid var(--soft); }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 6mm; }
+  .warn { color: var(--warn); font-weight: 700; }
+  .note { font-size: 9pt; color: var(--soft); margin-top: 2mm; }
+  footer { margin-top: 4mm; padding-top: 2mm; border-top: 0.8pt solid var(--line); font-size: 8.4pt; color: var(--soft); display: flex; justify-content: space-between; }
+  .small-qr { display: grid; grid-template-columns: 24mm 1fr; gap: 4mm; align-items: center; margin-top: 3mm; }
+  .small-qr img { width: 24mm; height: 24mm; }
+</style>
+</head>
+<body>
+
+<section class="page">
+  <header>
+    <div>
+      <h1>Weedo F192<br>Cómo imprimir</h1>
+      <p class="sub">Impresora 3D de doble boquilla · cama 280 × 200 mm · archivos <b>.x3g</b> desde tarjeta SD</p>
+      <p class="sub" style="margin-top:2mm">El software original de Weedo ya no existe. Este es el reemplazo: UltiMaker Cura con el perfil <b>WEEDO F192</b>.</p>
+    </div>
+    <div class="qr">
+      <img src="qr-repositorio.svg" alt="QR al repositorio">
+      <div class="url">github.com/nik0793/weedo-f192</div>
+      <div class="cap">Manual completo, perfil de Cura, firmware y archivos de prueba</div>
+    </div>
+  </header>
+
+  <div class="rules">
+    <ol>
+      <li>Solo imprime archivos <b>.x3g</b> hechos con el perfil <b>WEEDO F192</b> de Cura. Otros .x3g hacen que <b>vuelva al menú</b>.</li>
+      <li>Tarjeta SD común de <b>2 GB o menos</b>, formato <b>FAT</b>, archivos en la raíz.</li>
+      <li><span class="warn">No conectes ReplicatorG ni MakerBot Desktop:</span> cambian la configuración interna y las piezas salen mal.</li>
+      <li>El filamento tiene que pasar por el <b>sensor de filamento</b>; si no, la impresora se pausa sola.</li>
+    </ol>
+  </div>
+
+  <h2>Paso a paso</h2>
+  <ol class="steps">
+    <li><b class="k">Cura con el perfil.</b> Instalá UltiMaker Cura 5, abrilo y cerralo una vez, y ejecutá <code>cura/instalar-cura.bat</code> del repositorio. Agregá la impresora <b>WEEDO → WEEDO F192</b>.</li>
+    <li><b class="k">Elegí la boquilla.</b> Extrusor 1 = <b>derecha</b>, extrusor 2 = <b>izquierda</b>. Menú <b>Ajustes → Extrusor… → Habilitar / Deshabilitar extrusor</b>, o clic derecho en la pieza → <i>Imprimir modelo seleccionado con</i>.</li>
+    <li><b class="k">Cortá la pieza</b> con los valores de la tabla y tocá <b>Guardar en disco</b>. En <i>Tipo de archivo</i> elegí <b>X3G</b>. Nombre corto, sin espacios ni acentos: <code>PIEZA1.x3g</code>.</li>
+    <li><b class="k">Copiá el archivo</b> a la raíz de la tarjeta SD (2 GB o menos, FAT).</li>
+    <li><b class="k">En la impresora:</b> tarjeta en la ranura → <b>Imprimir</b> → <b>Tarjeta SD</b> → tocá el archivo.</li>
+    <li><b class="k">Al arrancar</b> hace home de X e Y en la esquina, lleva el cabezal <b>al centro</b>, sube la cama hasta el sensor, calienta, hace una línea de purga al frente y empieza. Para frenar: <b>Cancelar</b>.</li>
+  </ol>
+
+  <h2>Valores de partida (filamento 1,75 mm)</h2>
+  <table>
+    <tr><th></th><th>PLA</th><th>ABS</th></tr>
+    <tr><td>Boquilla / cama</td><td>200 °C / 60 °C</td><td>230 °C / 100 °C</td></tr>
+    <tr><td>Capa · paredes · relleno</td><td>0,2 mm · 0,8 mm · 15–20 %</td><td>0,2 mm · 0,8 mm · 15–20 %</td></tr>
+    <tr><td>Velocidad · primera capa</td><td>40–50 mm/s · 20–25 mm/s</td><td>40 mm/s · 20 mm/s</td></tr>
+    <tr><td>Adherencia · ventilador</td><td>Borde (brim) · 100 % desde la capa 2</td><td>Balsa o borde · apagado, puerta cerrada</td></tr>
+    <tr><td>Retracción</td><td colspan="2">1–1,5 mm a 25 mm/s</td></tr>
+  </table>
+  <p class="note">Con la boquilla izquierda el cabezal se corre 35 mm: dejá libres unos 4 cm del borde del lado donde hace home en X. Doble color (dos boquillas a la vez): todavía sin calibrar.</p>
+
+  <footer><span>Guía rápida Weedo F192 · 1/2</span><span>Licencia CC BY-SA 4.0</span></footer>
+</section>
+
+<section class="page">
+  <h2 style="margin-top:0">Si algo falla</h2>
+  <table>
+    <tr><th style="width:33%">Síntoma</th><th style="width:30%">Causa</th><th>Qué hacer</th></tr>
+    <tr><td>Al elegir el archivo <b>vuelve al menú</b> principal</td><td>El .x3g no tiene la marca que exige el firmware de Weedo</td><td>Generarlo con el perfil WEEDO F192 de este repositorio.</td></tr>
+    <tr><td>La lista de la tarjeta está vacía o no la lee</td><td>Tarjeta grande o formato FAT32/exFAT</td><td>SD de 2 GB o menos, formato FAT, archivos en la raíz.</td></tr>
+    <tr><td>En el home la cama <b>sube sin frenar</b> y el motor fuerza</td><td>El sensor de Z (va en el carro) no detecta</td><td>El home de Z se hace con el cabezal en el centro (el perfil lo hace). Revisar el cable del sensor y el conector Z-MIN.</td></tr>
+    <tr><td>La cama baja cuando debería subir, o el motor Z vibra</td><td>Cable del motor Z cortado o flojo</td><td>Medir las dos bobinas del motor Z en el conector de la placa.</td></tr>
+    <tr><td>Se pausa sola al principio</td><td>El sensor no detecta filamento</td><td>Pasar el filamento por el sensor; revisar su cable.</td></tr>
+    <tr><td>Imprime con la boquilla equivocada</td><td>Extrusor asignado en Cura</td><td>Extrusor 1 = derecha, 2 = izquierda. Ver el paso 2.</td></tr>
+    <tr><td>Piezas a mitad de altura, aplastadas o con extrusión rara</td><td>Configuración interna cambiada (típico tras conectar ReplicatorG)</td><td>Ejecutar <code>eeprom/verificar-eeprom.bat</code> y, si hay diferencias, <code>restaurar-eeprom.bat</code>.</td></tr>
+    <tr><td>Pronterface u OctoPrint no conectan</td><td>Usa protocolo binario (s3g), no G-code</td><td>Imprimir desde la SD.</td></tr>
+  </table>
+
+  <div class="two" style="margin-top:4mm">
+    <div>
+      <h2>Nivelar la cama</h2>
+      <p style="margin:0">Desde la pantalla, con la opción de nivelación de plataforma. En cada punto ajustá las tuercas de la cama hasta que una hoja de papel pase entre la boquilla y la cama con un leve roce. Hacé la vuelta completa dos veces.</p>
+    </div>
+    <div>
+      <h2>Configuración y firmware</h2>
+      <p style="margin:0">La carpeta <code>eeprom/</code> revisa y restaura la configuración de fábrica por USB. La carpeta <code>firmware/</code> tiene el firmware original, solo para rescates. <span class="warn">No grabes el firmware "F192C" de internet:</span> es de otra variante.</p>
+    </div>
+  </div>
+
+  <h2>Archivos de prueba</h2>
+  <p style="margin:0">En la carpeta <code>pruebas/</code> del repositorio: <code>MOVIM.X3G</code> comprueba el home sin calentar; <code>DADO_D.X3G</code> y <code>DADO_I.X3G</code> imprimen un dado de 20 mm con la boquilla derecha o la izquierda.</p>
+
+  <div class="small-qr">
+    <img src="qr-repositorio.svg" alt="QR al repositorio">
+    <div><b>Todo en github.com/nik0793/weedo-f192</b><br><span class="note" style="margin:0">Manual completo, perfil de Cura con instalador, firmware original, configuración de fábrica, notas técnicas y archivos de prueba. Botón verde <i>Code → Download ZIP</i> para bajarlo todo.</span></div>
+  </div>
+
+  <footer><span>Guía rápida Weedo F192 · 2/2</span><span>Hecho por y para escuelas técnicas · 2026</span></footer>
+</section>
+
+</body>
+</html>

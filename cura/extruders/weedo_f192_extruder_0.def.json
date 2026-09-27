@@ -1,0 +1,20 @@
+{
+    "version": 2,
+    "name": "Extrusor derecho (T0)",
+    "inherits": "fdmextruder",
+    "metadata":
+    {
+        "machine": "weedo_f192",
+        "position": "0"
+    },
+    "overrides":
+    {
+        "extruder_nr": { "default_value": 0 },
+        "machine_nozzle_size": { "default_value": 0.4 },
+        "material_diameter": { "default_value": 1.75 },
+        "machine_steps_per_mm_e": { "default_value": 93.275202 },
+        "machine_feeder_wheel_diameter": { "default_value": 10.92 },
+        "machine_nozzle_offset_x": { "default_value": 0.0 },
+        "machine_nozzle_offset_y": { "default_value": 0.0 }
+    }
+}

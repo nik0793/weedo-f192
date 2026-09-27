@@ -1,0 +1,5 @@
+# respaldos y descargas locales
+eeprom/respaldos/
+firmware/avrdude/
+firmware/respaldo_flash_*.hex
+__pycache__/

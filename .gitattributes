@@ -1,0 +1,10 @@
+*.bat text eol=crlf
+*.ps1 text eol=crlf
+*.hex text eol=crlf
+*.bin binary
+*.X3G binary
+*.x3g binary
+*.exe binary
+*.pdf binary
+cura/plugins/X3GWriter/gpx binary
+cura/plugins/X3GWriter/gpx_macos binary
