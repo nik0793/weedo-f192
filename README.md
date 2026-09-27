@@ -5,10 +5,10 @@ Todo lo necesario para volver a imprimir con la **Weedo F192** (la impresora 3D 
 | Carpeta | Qué hay |
 |---|---|
 | [`manual/`](manual/) | **Guía en PDF** ([guia-weedo-f192.pdf](manual/guia-weedo-f192.pdf)): hojas 1–2 para pegar al lado de la máquina (con QR a esta página) y, desde la hoja 3, la instalación y configuración de Cura paso a paso con capturas. |
-| [`cura/`](cura/) | Perfil de la F192 para UltiMaker Cura 5 y el complemento que genera los archivos `.x3g`, con instalador. |
-| [`pruebas/`](pruebas/) | Archivos listos para comprobar la máquina sin instalar nada. |
-| [`eeprom/`](eeprom/) | Verificar y restaurar la configuración interna de la impresora. |
-| [`firmware/`](firmware/) | Firmware original de la F192 y cómo respaldarlo o grabarlo (solo para rescates). |
+| [`cura/`](cura/LEEME.md) | Perfil de la F192 para UltiMaker Cura 5 y el complemento que genera los archivos `.x3g`, con instalador. |
+| [`pruebas/`](pruebas/LEEME.md) | Archivos listos para comprobar la máquina sin instalar nada. |
+| [`eeprom/`](eeprom/LEEME.md) | Verificar y restaurar la configuración interna de la impresora. |
+| [`firmware/`](firmware/LEEME.md) | Firmware original de la F192 y cómo respaldarlo o grabarlo (solo para rescates). |
 | [`herramientas/`](herramientas/) | Ver el estado de la impresora, imprimir por cable USB y cancelar. |
 | [`docs/NOTAS-TECNICAS.md`](docs/NOTAS-TECNICAS.md) | Cómo funciona por dentro y qué descubrimos para que ande. |
 
@@ -21,7 +21,7 @@ Para descargar todo: botón verde **Code** → **Download ZIP**; después, clic 
 1. **La F192 solo imprime archivos `.x3g` desde la tarjeta SD.** No entiende G-code; Pronterface, OctoPrint o un Cura común no sirven solos.
 2. **Los `.x3g` tienen que salir de este perfil de Cura.** El firmware de Weedo exige una marca especial al principio del archivo; los `.x3g` hechos con otros programas hacen que la impresora **vuelva al menú principal** al elegirlos.
 3. **Tarjeta SD común de 2 GB o menos, formateada en FAT** (FAT16). Con una de 32 GB no la pudo leer.
-4. **No conectes ReplicatorG ni MakerBot Desktop a la impresora.** Al conectarse cambian la configuración interna (por ejemplo, los pasos del eje Z) y las piezas salen mal. Si ya pasó, se arregla con [`eeprom/restaurar-eeprom.bat`](eeprom/).
+4. **No conectes ReplicatorG ni MakerBot Desktop a la impresora.** Al conectarse cambian la configuración interna (por ejemplo, los pasos del eje Z) y las piezas salen mal. Si ya pasó, se arregla con [`eeprom/restaurar-eeprom.bat`](eeprom/LEEME.md).
 5. **No grabes el firmware "F192C" que aparece en internet.** Es otro firmware (Marlin) para otra variante; no lo probamos en la F192 y cambia la forma de trabajar.
 
 ---
@@ -33,7 +33,7 @@ Para descargar todo: botón verde **Code** → **Download ZIP**; después, clic 
 3. Ejecutá **`cura/instalar-cura.bat`** con Cura cerrado. Copia el perfil de la F192, sus dos boquillas y el complemento X3GWriter modificado.
 4. Abrí Cura y agregá la impresora: en el asistente, o en **Preferencias → Configurar Cura... → Impresoras → Añadir nuevo** → **Impresoras no UltiMaker** (*Non UltiMaker printer*) → **Agregar una impresora fuera de red** (*Add a non-networked printer*) → buscá `weedo` → **WEEDO F192** → **Agregar** (*Add*). Cura trae otras Weedo de fábrica (F150S, F152S, TINA2…): no sirven para la F192.
 5. Si Cura quedó en inglés: *Preferences → Configure Cura... → General → Language\** → **Español**, y volvé a abrirlo.
-6. **No instales ni actualices X3GWriter desde el Marketplace**: se perderían las modificaciones para la F192. El botón **Actualizar firmware** de Cura no sirve para esta máquina: Cura no trae firmware para la F192 ni puede comunicarse con ella por USB. Para rescates, ver [`firmware/`](firmware/).
+6. **No instales ni actualices X3GWriter desde el Marketplace**: se perderían las modificaciones para la F192. El botón **Actualizar firmware** de Cura no sirve para esta máquina: Cura no trae firmware para la F192 ni puede comunicarse con ella por USB. Para rescates, ver [`firmware/`](firmware/LEEME.md).
 7. **No cambies Ajustes de la máquina** (tamaño de cama ni inicio de impresión). Cura guarda esos cambios dentro de la impresora agregada y volver a ejecutar el instalador no los deshace. Si alguien los cambió, agregá otra **WEEDO F192** (queda con otro nombre, por ejemplo *WEEDO F192 #2*) y después eliminá la vieja en **Preferencias → Configurar Cura... → Impresoras** → elegila → menú **☰** → **Eliminar** (Cura no deja eliminar la única impresora; por eso primero se agrega la nueva).
 
 La guía en PDF ([`manual/guia-weedo-f192.pdf`](manual/guia-weedo-f192.pdf), desde la hoja 3) muestra cada pantalla.
@@ -115,7 +115,7 @@ En la pantalla: **Ajustes** (el botón con la llave) → **Nivelar plato de impr
 
 ## 8. Configuración interna (EEPROM)
 
-La impresora guarda su configuración (pasos por mm, corriente de motores, home, velocidades) en una memoria interna. En [`eeprom/`](eeprom/):
+La impresora guarda su configuración (pasos por mm, corriente de motores, home, velocidades) en una memoria interna. En [`eeprom/`](eeprom/LEEME.md):
 
 - **`verificar-eeprom.bat`**: lee la configuración por USB, guarda un respaldo y la compara con la de fábrica. No cambia nada.
 - **`restaurar-eeprom.bat`**: reescribe solo las partes que difieren de fábrica y verifica releyendo. Antes muestra el puerto y el nombre de la máquina y pide escribir `SI`. No toca contadores de horas ni la calibración fina entre boquillas.

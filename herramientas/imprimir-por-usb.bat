@@ -5,7 +5,7 @@ set "ARCH=%~1"
 if not defined ARCH set /p "ARCH=Arrastra aca el archivo .x3g y apreta Enter: "
 if not defined ARCH goto :sinarchivo
 set ARCH=%ARCH:"=%
-powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0imprimir-por-usb.ps1" -Archivo "%ARCH%"
+powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0imprimir-por-usb.ps1" -Archivo "%ARCH%" %2 %3
 pause
 exit /b
 :sinarchivo
