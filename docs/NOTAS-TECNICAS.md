@@ -38,7 +38,7 @@ Otro detalle del mismo código: desde la orden 200 de cada trabajo el firmware r
 
 ## Configuración interna (EEPROM)
 
-Mapa de Sailfish 7.6 más una zona propia de Weedo. Valores de fábrica, idénticos en las dos máquinas revisadas:
+Mapa de Sailfish 7.6 más una zona propia de Weedo. Valores de fábrica; la configuración es idéntica en las dos máquinas revisadas, los datos de estado (reanudar, último archivo) no:
 
 | Dirección | Contenido | Fábrica |
 |---|---|---|
@@ -54,15 +54,32 @@ Mapa de Sailfish 7.6 más una zona propia de Weedo. Valores de fábrica, idénti
 | 0x01F4 | Velocidades máximas (mm/min) | 18000 / 18000 / 1170 / 1600 / 1600 |
 | 0x0210 | Weedo: sensor de filamento habilitado (0 = sí) | 0 |
 | 0x0211 | Weedo: versión de `.x3g` exigida | **5** |
+| 0x0212–0x0223 | Weedo: estado para reanudar una impresión cortada. El firmware lee 0x0213 y lo compara con 1 (reanudación pendiente) y guarda y recupera juntos tres valores de 16 bits desde 0x0214. No es configuración: lo escribe el propio firmware | 0x0213 = 0 |
+| 0x022E | Weedo: nombre del último `.x3g` impreso (texto UTF-16) | — |
 | 0x0F93 | Sistema de offsets entre boquillas | 1 (nuevo) |
 
-**ReplicatorG 0040 pisa la EEPROM al conectarse** con el perfil "The Replicator Dual": escribe pasos por mm de Z = 400, extrusores = 96,275201 y 20 bytes desde 0x0210 (donde cree que están los largos de ejes), incluido el 0x0211. Resultado: capas a la mitad de altura y todos los `.x3g` rechazados. Se arregla con `eeprom/restaurar-eeprom.bat`.
+La rutina de valores de fábrica del firmware (dirección 0x1509E del flash) escribe 0x0210 = 0, 0x0211 = 5, 0x0212 = 0 y 0x0213 = 0.
+
+**ReplicatorG 0040 pisa la EEPROM al conectarse** con el perfil "The Replicator Dual": escribe pasos por mm de Z = 400, extrusores = 96,275201 y 20 bytes desde 0x0210, donde cree que están los largos de ejes (227, 148, 150, 100000 y 100000). Eso deja el 0x0211 en 0 y llena de otros valores la zona de reanudación (0x0212–0x0223). Resultado: capas a la mitad de altura y todos los `.x3g` rechazados. Se arregla con `eeprom/restaurar-eeprom.bat`.
 
 **Nunca escribir la EEPROM con avrdude.** El bootloader de esta placa duplica la dirección al leer la EEPROM: el volcado sale intercalado (solo los bloques pares de 8 bytes, y la mitad alta es espejo). Leerla y escribirla siempre por s3g (comandos 12 y 13), como hacen los scripts de `eeprom/`.
 
 ## Dos boquillas (verificado en el desensamblado, 0x0DDAC)
 
-Al cambiar a la boquilla izquierda (comando 134, herramienta 1) el firmware suma al X de cada movimiento `35,0 mm × pasos/mm − desviación guardada en 0x0162`, y al Y `− desviación de 0x0166`. Weedo cambió la constante de 33 mm (MakerBot) a **35 mm**. Así la pieza cae en el mismo lugar con cualquiera de las dos boquillas, pero con la izquierda el carro necesita 35 mm más hacia el lado del home de X. GPX no aplica desplazamientos propios, por eso en Cura el *nozzle offset* va en 0.
+Al cambiar a la boquilla izquierda (comando 134, herramienta 1) el firmware suma al X de cada movimiento `35,0 mm × pasos/mm − desviación guardada en 0x0162`, y al Y `− desviación de 0x0166`. Weedo cambió la constante de 33 mm (MakerBot) a **35 mm**. Así la pieza cae en el mismo lugar con cualquiera de las dos boquillas, pero con la izquierda el carro necesita 35 mm más hacia la derecha, el lado del home de X: con la boquilla izquierda no se llega a los últimos 35 mm del borde derecho de la cama. GPX no aplica desplazamientos propios, por eso en Cura el *nozzle offset* va en 0.
+
+**Orden del cambio de boquilla respecto del home (verificado).** Al fijar una posición (comando 140, que GPX genera para cada `G92`), el firmware la interpreta en el sistema de la boquilla activa: le suma el desplazamiento de esa boquilla (`definePosition`, `position += tool_offsets` salvo en el home recuperado de la EEPROM). Si la boquilla izquierda ya está activa cuando el inicio hace `G92 X160 Y107.5` en la esquina de home, el firmware cree que el carro está 35 mm más allá de donde está y la compensación se anula: la pieza sale corrida 35 mm. Cura, por defecto, pone el `T1` **antes** del G-code de inicio. Por eso:
+
+- el perfil activa *"Primero debe ir el GCode de inicio"* (`machine_start_gcode_first`), y el inicio cambia de boquilla recién después del home (`T{initial_extruder_nr}` tras `M132 Z A B`);
+- además, el complemento reordena el archivo: quita los cambios de herramienta anteriores al "recuperar home" (144), fuerza T0 antes del home y vuelve a la boquilla elegida justo después del 144.
+
+Resultado comprobado decodificando lo que genera Cura: `157 v5 → 153 → 134 T0 → home XY → home Z → 144 → 134 T1 → primer movimiento`.
+
+**Con las dos boquillas habilitadas (comprobado en Cura 5.12 con este perfil).** Si la pieza se asigna a la izquierda y la otra boquilla queda habilitada, el borde (*brim*) sale con la izquierda y Cura avisa *"Extrusor(es) no usado(s)"*, pero la **balsa** sale con la derecha: el trabajo pasa a usar las dos boquillas. Por eso la guía pide deshabilitar la que no se usa. En esos trabajos con cambio de boquilla, Cura escribe `M105` y GPX lo convierte en bytes de consulta sueltos dentro del `.x3g` (por ejemplo `18 0A 00 02 00 …`); no se probó cómo los toma el firmware. El complemento solo reordena el principio del archivo y deja el resto como está.
+
+## Conversión a `.x3g` (GPX)
+
+El complemento le pide a GPX `recalculate_5d = 0`: GPX usa la extrusión (E) que calcula Cura. El X3GWriter original usaba `1`, y GPX recalculaba E como distancia × diámetro de boquilla × altura de capa; para la primera capa usaba su altura por defecto (0,34 mm) aunque Cura cortara a 0,2 mm, y el flujo y los anchos de línea de Cura no tenían efecto. Comprobado decodificando los `.x3g` de `pruebas/`: con `0` la purga del inicio da 13,0 mm de filamento y la sección de extrusión es 0,3 × 0,4 mm en la primera capa y 0,2 × 0,4 mm en las siguientes, igual que Cura; con `1`, la primera capa de los dados anteriores salía con 0,34 × 0,4 mm (70 % más de material).
 
 ## Tarjeta SD
 
@@ -90,6 +107,7 @@ Error que hay que evitar: `M132 X Y Z A B` después de mover el cabezal al centr
 ## Cómo se averiguó
 
 - Lectura del firmware y la EEPROM de una máquina de fábrica con avrdude (flash) y por s3g (EEPROM).
-- Desensamblado del firmware con un desensamblador AVR propio y comparación con el código fuente de Sailfish 7.6 (commit de enero de 2014).
+- Desensamblado del firmware con un desensamblador AVR propio y comparación con el código fuente de Sailfish 7.6 (commit `e983bf8` de jetty840/Sailfish-MightyBoardFirmware, enero de 2014).
+- El bootloader de la imagen completa (0x1F000–0x1FF15) es idéntico byte a byte a `ATmegaBOOT_168_atmega1280.hex` de Arduino.
 - Archivos de prueba de tamaño creciente en la máquina real: los de 512 bytes o menos imprimían, cualquiera más grande volvía al menú, hasta encontrar el control del comando 157.
 - Documentación archivada de Weedo en el Wayback Machine (weedo.ltd y la wiki weedotina2.com).

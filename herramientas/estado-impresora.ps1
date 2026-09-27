@@ -4,7 +4,7 @@
 param([string]$Port = "", [switch]$Cancelar)
 $ErrorActionPreference = "Stop"
 . "$PSScriptRoot\s3g-comun.ps1"
-$estados = @{ 0 = "sin trabajo"; 1 = "imprimiendo"; 2 = "termino bien"; 3 = "cancelado"; 4 = "en pausa"; 5 = "detenido" }
+$estados = @{ 0 = "sin trabajo"; 1 = "imprimiendo"; 2 = "termino bien"; 3 = "en pausa"; 4 = "cancelado"; 5 = "cancelando" }
 $sp = Open-Impresora $Port
 try {
   if ($Cancelar) { $r = Send-S3g $sp ([byte[]](7)); Write-Host ("Cancelar: {0}" -f $(if ($r[0] -eq 0x81) { "OK" } else { "codigo 0x{0:X2}" -f $r[0] })) ; Start-Sleep -Milliseconds 500 }

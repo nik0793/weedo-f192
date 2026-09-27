@@ -32,3 +32,7 @@ Los dos `.hex` se leyeron de una máquina de fábrica y se comprobó que son id�
 
 - **La EEPROM nunca se graba con avrdude**: el bootloader de esta placa la lee y escribe mal. La configuración se maneja con los scripts de `../eeprom/`.
 - No grabes el firmware "F192C V2.1.0" que circula por internet: es Marlin, para otra variante.
+
+## Licencia
+
+El firmware es Sailfish 7.6 (GPL-3.0) modificado por Weedo, que nunca publicó el código de sus cambios. El bootloader incluido en `F192_COMPLETO_CON_BOOTLOADER.hex` es el ATmegaBOOT de Arduino sin modificar (GPL-2.0). Detalle y enlaces al código fuente en [../LICENCIAS.md](../LICENCIAS.md).

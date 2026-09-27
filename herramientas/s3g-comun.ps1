@@ -38,25 +38,30 @@ function Send-S3g($sp, [byte[]]$payload) {
 
 function Open-Impresora([string]$Port = "") {
   # Abre el puerto de la impresora. Si no se indica, prueba todos los puertos COM y se queda con el que responde como Sailfish.
+  # Si responde mas de uno, no elige: pide indicar el puerto con -Port (para no escribir en la maquina equivocada).
   $candidatos = @()
-  if ($Port) { $candidatos = @($Port) } else { $candidatos = [System.IO.Ports.SerialPort]::GetPortNames() | Sort-Object -Unique }
+  if ($Port) { $candidatos = @($Port) } else { $candidatos = @([System.IO.Ports.SerialPort]::GetPortNames() | Sort-Object -Unique) }
+  $encontradas = New-Object System.Collections.Generic.List[object]
   foreach ($p in $candidatos) {
     $sp = New-Object System.IO.Ports.SerialPort $p, 115200, "None", 8, "One"
     $sp.ReadTimeout = 3000; $sp.WriteTimeout = 3000; $sp.DtrEnable = $false; $sp.RtsEnable = $false
     try {
       $sp.Open(); Start-Sleep -Milliseconds 2000; $sp.DiscardInBuffer()
       $v = Send-S3g $sp ([byte[]](0, 100, 0))
-      if ($v[0] -eq 0x81) {
-        $ver = $v[1] + 256 * $v[2]
-        Write-Host ("Impresora encontrada en {0} (firmware s3g {1})" -f $p, $ver)
-        return $sp
-      }
+      if ($v[0] -eq 0x81) { $encontradas.Add([pscustomobject]@{ Sp = $sp; Ver = $v[1] + 256 * $v[2] }); continue }
       $sp.Close()
     } catch {
       try { $sp.Close() } catch {}
     }
   }
-  throw "No encontre la impresora. Revisa que este encendida, conectada por USB, con el driver instalado, y que ReplicatorG/Cura no tengan el puerto abierto."
+  if ($encontradas.Count -eq 0) { throw "No encontre la impresora. Revisa que este encendida, conectada por USB, con el driver instalado, y que ReplicatorG/Cura no tengan el puerto abierto." }
+  if ($encontradas.Count -gt 1) {
+    $lista = ($encontradas | ForEach-Object { $_.Sp.PortName }) -join ", "
+    foreach ($e in $encontradas) { try { $e.Sp.Close() } catch {} }
+    throw ("Hay mas de una impresora respondiendo ({0}). Deja conectada solo la que queres usar o indica el puerto con -Port COMx." -f $lista)
+  }
+  Write-Host ("Impresora encontrada en {0} (firmware s3g {1})" -f $encontradas[0].Sp.PortName, $encontradas[0].Ver)
+  return $encontradas[0].Sp
 }
 
 function Read-Eeprom($sp, [int]$off, [int]$len) {

@@ -4,14 +4,15 @@
     "inherits": "fdmprinter",
     "metadata": {
         "visible": true,
-        "author": "nik0793 (perfil armado a partir de la EEPROM de fabrica de la F192, septiembre 2026)",
+        "author": "nik0793",
         "manufacturer": "WEEDO",
         "file_formats": "application/x3g;text/x-gcode",
         "has_materials": true,
         "machine_extruder_trains": {
             "0": "weedo_f192_extruder_0",
             "1": "weedo_f192_extruder_1"
-        }
+        },
+        "preferred_quality_type": "draft"
     },
     "overrides": {
         "machine_name": {
@@ -96,6 +97,9 @@
         },
         "machine_start_gcode": {
             "default_value": "M73 P0 ; progreso 0%\nG21\nG90\n;(**** homing ****)\nG162 X Y F2500 ; home X e Y al maximo (esquina)\nG92 X160 Y107.5 ; posicion de home de fabrica (EEPROM 15062/10120 pasos)\nG1 X0 Y0 F3000 ; cabezal al CENTRO antes del home de Z: el sensor de Z va en el carro y fuera de la placa no detecta\nG161 Z F1100 ; home Z al minimo (cama sube al sensor)\nG92 Z-5\nG1 Z0.0 F1100\nG161 Z F100 ; home Z lento\nM132 Z A B ; recuperar solo Z A B\n;(**** fin homing ****)\nT{initial_extruder_nr} ; boquilla elegida en Cura: T0 = derecha, T1 = izquierda (con T1 el firmware corre el cabezal 35 mm para que la pieza caiga en el mismo lugar)\nG1 X-100 Y-90 Z10 F3300 ; posicion de espera (adelante)\nM140 S{material_bed_temperature_layer_0} ; cama\nM104 S{material_print_temperature_layer_0, initial_extruder_nr} T{initial_extruder_nr} ; calentar solo la boquilla elegida\nM190 S{material_bed_temperature_layer_0}\nM109 S{material_print_temperature_layer_0, initial_extruder_nr} T{initial_extruder_nr}\nG92 E0\nG1 Z0.3 F600\nG1 X60 Y-90 E13 F900 ; linea de purga al frente\nG92 E0\nG1 Z2 F600"
+        },
+        "machine_start_gcode_first": {
+            "default_value": true
         },
         "machine_end_gcode": {
             "default_value": "M104 S0 T0\nM104 S0 T1\nM140 S0\nG92 Z0\nG1 Z20 F1100 ; bajar la cama\nG162 X Y F2500 ; home X e Y\nM18 ; apagar motores\nM73 P100 ; progreso 100%"

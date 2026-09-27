@@ -27,6 +27,6 @@ pause
 if errorlevel 1 (
   echo FALLO. Si dice "not in sync" o "timeout", repetir: reset apretado, tecla, soltar.
 ) else (
-  echo LISTO: %SALIDA%
+  echo LISTO: "%SALIDA%"
 )
 pause

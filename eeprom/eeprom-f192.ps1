@@ -4,19 +4,23 @@
 #   Solo verificar (no escribe nada):   powershell -ExecutionPolicy Bypass -File eeprom-f192.ps1
 #   Restaurar lo que difiere:           powershell -ExecutionPolicy Bypass -File eeprom-f192.ps1 -Restaurar
 #   Solo hacer una copia de respaldo:   powershell -ExecutionPolicy Bypass -File eeprom-f192.ps1 -SoloRespaldo
+#   Volver a grabar un respaldo:        powershell -ExecutionPolicy Bypass -File eeprom-f192.ps1 -Restaurar -Desde respaldos\EEPROM_<fecha>.bin
 #   Puerto fijo (opcional):             ... -Port COM5
 #
-# Antes de escribir guarda un respaldo completo en la carpeta "respaldos" (EEPROM_<fecha>.bin).
+# Antes de escribir guarda un respaldo completo en la carpeta "respaldos" (EEPROM_<fecha>.bin), muestra el puerto y
+# el nombre de la maquina y pide escribir SI. Si hay mas de una impresora conectada, se detiene y pide -Port.
 # No toca: contadores de horas y filamento, calibracion fina entre boquillas, perfiles de precalentado.
-param([string]$Port = "", [switch]$Restaurar, [switch]$SoloRespaldo)
+param([string]$Port = "", [switch]$Restaurar, [switch]$SoloRespaldo, [string]$Desde = "")
 $ErrorActionPreference = "Stop"
 . "$PSScriptRoot\..\herramientas\s3g-comun.ps1"
 
-$refPath = Join-Path $PSScriptRoot "EEPROM_F192_FABRICA.bin"
+$refPath = if ($Desde) { (Resolve-Path $Desde).Path } else { Join-Path $PSScriptRoot "EEPROM_F192_FABRICA.bin" }
 $ref = [System.IO.File]::ReadAllBytes($refPath)
 if ($ref.Length -ne 4096) { throw "La EEPROM de referencia debe medir 4096 bytes." }
+if ($Desde) { Write-Host ("Referencia: {0}" -f $refPath) }
 
-# Zonas de configuracion que se comparan (mapa de Sailfish 7.6 + zona propia de Weedo)
+# Zonas de configuracion que se comparan (mapa de Sailfish 7.6 + zona propia de Weedo).
+# Soloestado = datos que escribe el propio firmware: una diferencia solo ahi no impide imprimir.
 $zonas = @(
   @{ Off = 0x0002; Len = 32; Nombre = "sentido de ejes, finales de carrera, corriente de motores, direccion y posicion de home" },
   @{ Off = 0x0022; Len = 16; Nombre = "nombre de la maquina" },
@@ -26,7 +30,8 @@ $zonas = @(
   @{ Off = 0x01A4; Len = 20; Nombre = "pasos por mm (X Y Z y extrusores)" },
   @{ Off = 0x01D8; Len = 28; Nombre = "aceleracion (2)" },
   @{ Off = 0x01F4; Len = 20; Nombre = "velocidades maximas" },
-  @{ Off = 0x0210; Len = 4;  Nombre = "zona Weedo: sensor de filamento y version de archivo x3g (debe ser 5)" },
+  @{ Off = 0x0210; Len = 2;  Nombre = "zona Weedo: sensor de filamento y version de archivo x3g (debe ser 5)" },
+  @{ Off = 0x0212; Len = 18; Nombre = "zona Weedo: datos para reanudar una impresion cortada (ReplicatorG tambien escribe aca)"; Soloestado = $true },
   @{ Off = 0x0F93; Len = 1;  Nombre = "sistema de desplazamiento entre boquillas" }
 )
 
@@ -41,6 +46,8 @@ try {
   if ($SoloRespaldo) { return }
 
   # Resumen legible de lo mas importante
+  $nombre = [System.Text.Encoding]::ASCII.GetString($actual, 0x22, 16).Split([char]0)[0]
+  Write-Host ("Maquina en {0}: '{1}'" -f $sp.PortName, $nombre)
   $pasos = 0..4 | ForEach-Object { [BitConverter]::ToUInt32($actual, 0x01A4 + 4 * $_) / 1e6 }
   Write-Host ("Pasos por mm X Y Z A B: {0}" -f (($pasos | ForEach-Object { "{0:0.######}" -f $_ }) -join " / "))
   Write-Host ("Corriente de motores X Y Z A B: {0}" -f (($actual[6..10]) -join " / "))
@@ -63,10 +70,22 @@ try {
   }
 
   if ($difieren.Count -eq 0) { Write-Host "La configuracion coincide con la de fabrica."; return }
+  $importantes = @($difieren | Where-Object { -not $_.Soloestado })
   if (-not $Restaurar) {
-    Write-Host ("{0} zona(s) distinta(s). Para restaurarlas, ejecutar restaurar-eeprom.bat (o este script con -Restaurar)." -f $difieren.Count)
+    if ($importantes.Count -eq 0) {
+      Write-Host "Solo difieren los datos para reanudar impresiones: la configuracion esta bien y no hace falta restaurar."
+    } else {
+      Write-Host ("{0} zona(s) distinta(s). Para restaurarlas, ejecutar restaurar-eeprom.bat (o este script con -Restaurar)." -f $difieren.Count)
+    }
     return
   }
+
+  # Antes de escribir: que sea una F192 y que la persona confirme el puerto
+  if ($nombre -ne "WEEDO F192" -and -not $Port) {
+    throw ("La maquina en {0} se llama '{1}', no 'WEEDO F192'. No se escribio nada. Si es una F192 con el nombre borrado, repetir indicando el puerto: -Port {0}" -f $sp.PortName, $nombre)
+  }
+  $conf = Read-Host ("Se van a reescribir {0} zona(s) de la impresora en {1} ('{2}'). Escribi SI para seguir" -f $difieren.Count, $sp.PortName, $nombre)
+  if ($conf -ne "SI") { Write-Host "Cancelado. No se escribio nada."; return }
 
   foreach ($z in $difieren) {
     $datos = [byte[]]$ref[$z.Off..($z.Off + $z.Len - 1)]

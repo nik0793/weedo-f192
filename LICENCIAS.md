@@ -1,14 +1,20 @@
 # Licencias
 
-Este repositorio junta piezas de distinto origen; cada una conserva su licencia.
+© 2026 nik0793 y colaboradores ([github.com/nik0793/weedo-f192](https://github.com/nik0793/weedo-f192)), salvo las partes de terceros indicadas abajo. Este repositorio junta piezas de distinto origen; cada una conserva su licencia.
 
 | Parte | Origen | Licencia |
 |---|---|---|
-| Manual, guía rápida y notas (`README.md`, `manual/`, `docs/`, `LEEME.md`) | Este proyecto | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/deed.es) |
+| Manual, guía y notas (`README.md`, `manual/guia-weedo-f192.*`, `docs/`, los `LEEME.md`) | Este proyecto, salvo las imágenes de terceros (ver nota) | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/deed.es) |
 | Scripts propios (`cura/instalar-cura.*`, `eeprom/`, `firmware/*.bat`, `herramientas/`) y perfil de Cura (`cura/definitions`, `cura/extruders`) | Este proyecto | GPL-3.0 (ver `LICENSE`) |
-| Complemento `cura/plugins/X3GWriter/` | [X3GWriter](https://github.com/Ghostkeeper/X3GWriter) de Ghostkeeper, modificado para la F192 (cambios en `CAMBIOS-WEEDO.md`) | AGPL-3.0 (ver su `LICENSE`) |
-| Binarios `gpx`, `gpx.exe`, `gpx_macos` dentro del complemento | [GPX](https://github.com/markwal/GPX) de Mark Walker y colaboradores, tal como vienen en X3GWriter 1.1.13 | GPL-2.0 |
-| Firmware `firmware/*.hex` | Sailfish ([jetty840/Sailfish-MightyBoardFirmware](https://github.com/jetty840/Sailfish-MightyBoardFirmware)), derivado del firmware de MakerBot, modificado por Weedo / Wiiboox; bootloader tipo ATmegaBOOT | GPL-3.0 (Sailfish). Ver nota. |
-| EEPROM de referencia `eeprom/EEPROM_F192_FABRICA.bin` | Leída de una máquina de fábrica; se borraron los nombres de archivos impresos | Datos de configuración |
+| Archivos de prueba (`pruebas/*.X3G`, `pruebas/cubo_20mm.stl`) | Este proyecto (los `.X3G` se generaron con el perfil y el complemento de este repositorio) | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/deed.es) |
+| Complemento `cura/plugins/X3GWriter/` | [X3GWriter](https://github.com/Ghostkeeper/X3GWriter) 1.1.13 de Ghostkeeper, modificado para la F192 (cambios en `CAMBIOS-WEEDO.md`) | AGPL-3.0 (ver su `LICENSE`) |
+| Binarios `gpx`, `gpx.exe`, `gpx_macos` dentro del complemento | [GPX 2.6.8](https://github.com/markwal/GPX/tree/2.6.8), © 2013 WHPThomas, con cambios de DNewman y MWalker. Sin modificar, tal como vienen en X3GWriter 1.1.13 | GPL-2.0 (texto en `cura/plugins/X3GWriter/GPX-LICENSE.txt`) |
+| Firmware `firmware/F192_FIRMWARE.hex` y la parte de aplicación de `firmware/F192_COMPLETO_CON_BOOTLOADER.hex` | Sailfish 7.6 ([jetty840/Sailfish-MightyBoardFirmware, commit e983bf8](https://github.com/jetty840/Sailfish-MightyBoardFirmware/tree/e983bf80166428aeb3104621d5a53e916362f927)), derivado del firmware de MakerBot, modificado por Weedo / Wiiboox | GPL-3.0 (Sailfish). Ver nota. |
+| Bootloader dentro de `firmware/F192_COMPLETO_CON_BOOTLOADER.hex` (0x1F000–0x1FF15) | ATmegaBOOT de Arduino para ATmega1280, sin modificar: idéntico byte a byte a `ATmegaBOOT_168_atmega1280.hex` ([código fuente en arduino/ArduinoCore-avr](https://github.com/arduino/ArduinoCore-avr/tree/master/bootloaders/atmega)) | GPL-2.0 |
+| EEPROM de referencia `eeprom/EEPROM_F192_FABRICA.bin` | Leída de una máquina de fábrica; se pusieron en cero los bytes 0x022E–0x0266 (nombre del último archivo impreso) | Datos de configuración |
 
-**Nota sobre el firmware.** Es una copia exacta del que traían las máquinas, leída con avrdude. Sailfish es software libre bajo GPL-3.0, pero Weedo nunca publicó el código fuente de sus modificaciones y su sitio ya no existe, así que acá solo podemos ofrecer el binario y el enlace al código de Sailfish. Se publica para que las escuelas puedan reparar sus máquinas. Si sos titular de derechos y tenés una objeción, abrí un *issue* y lo resolvemos.
+**Nota sobre el firmware.** Es una copia exacta del que traían las máquinas, leída con avrdude. Sailfish es software libre bajo GPL-3.0, pero Weedo nunca publicó el código fuente de sus modificaciones y su sitio ya no existe, así que acá solo podemos ofrecer el binario y el enlace al código de Sailfish. El bootloader es el de Arduino sin cambios y su código fuente está en el enlace de la tabla. Se publica para que las escuelas puedan reparar sus máquinas. Si sos titular de derechos y tenés una objeción, abrí un *issue* y lo resolvemos.
+
+**Binarios de GPX (SHA-256).** `gpx` da096779f52240c1a1bd6605b86392422964dbc074f97d3ef93ae155de2e30f2 · `gpx.exe` cbd6a59b99ca754b0c5224f684a22b569cb811ae0ad5a6531db6cebf3ce9f57c · `gpx_macos` a4ae1af0c5a9fa6fe68cbecfcb0a397023bb9e396d59a56be65a1714fe9bcacb. `gpx.exe` se identifica como "GPX 2.6.8". El código fuente correspondiente es la etiqueta [2.6.8 de markwal/GPX](https://github.com/markwal/GPX/tree/2.6.8).
+
+**Nota sobre las imágenes del manual.** Las capturas `manual/img/01` y `04` a `15` muestran la interfaz de UltiMaker Cura (LGPL-3.0, © UltiMaker), con sus ilustraciones y logos; la `02` y la `03`, ventanas de Windows; las fotos `20` a `22`, la pantalla de fábrica de la impresora con el logo WEEDO. Esas interfaces, ilustraciones y logos pertenecen a sus titulares, no quedan bajo CC BY-SA y se incluyen solo para mostrar cómo se usa el programa y la máquina. UltiMaker, Cura, Windows y WEEDO son marcas de sus titulares; este proyecto no tiene relación con ellos. Lo que agrega este proyecto (textos, maquetación, recuadros y números sobre las capturas) y las fotos en sí van bajo CC BY-SA 4.0.

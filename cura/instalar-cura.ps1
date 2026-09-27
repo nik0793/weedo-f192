@@ -33,5 +33,5 @@ Write-Host "Instalado:"
 Write-Host ("  {0}" -f (Join-Path $dDef "weedo_f192.def.json"))
 Write-Host ("  {0} (2 extrusores)" -f $dExt)
 Write-Host ("  {0}" -f $dPlg)
-Write-Host "Abri Cura y agrega la impresora: Preferencias > Configurar Cura > Impresoras > Agregar > Agregar una impresora sin conexion en red > WEEDO > WEEDO F192."
+Write-Host "Abri Cura y agrega la impresora: Preferencias > Configurar Cura > Impresoras > Anadir nuevo > Impresoras no UltiMaker > Agregar una impresora fuera de red > buscar weedo > WEEDO F192 (no F150S ni F152S)."
 Write-Host "Importante: no actualices ni reinstales X3GWriter desde el Marketplace (se perderian los cambios para la F192)."

@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Weedo F192 - Guía de uso e instalación</title>
+<style>
+  @page { size: A4; margin: 13mm 14mm 12mm 14mm; }
+  :root { --ink: #151515; --soft: #555; --line: #c9c9c9; --accent: #0b5cad; --warn: #b3261e; --band: #eef3f9; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: #fff; color: var(--ink); }
+  body { font-family: "Segoe UI", Arial, sans-serif; font-size: 10.9pt; line-height: 1.34; }
+  .page { page-break-after: always; }
+  .page:last-child { page-break-after: auto; }
+  header { display: grid; grid-template-columns: 1fr 48mm; gap: 6mm; align-items: start; border-bottom: 2.2pt solid var(--ink); padding-bottom: 4mm; margin-bottom: 4.5mm; }
+  h1 { font-size: 22pt; line-height: 1.05; margin: 0 0 1.5mm 0; letter-spacing: -0.3pt; }
+  .sub { color: var(--soft); font-size: 10.5pt; margin: 0; }
+  .qr { text-align: center; }
+  .qr img { width: 34mm; height: 34mm; display: block; margin: 0 auto 1mm auto; }
+  .qr .url { font-size: 8.4pt; font-weight: 700; white-space: nowrap; }
+  .qr .cap { font-size: 7.6pt; color: var(--soft); }
+  h2 { font-size: 12.5pt; margin: 4.2mm 0 1.8mm 0; padding-bottom: 0.8mm; border-bottom: 0.8pt solid var(--line); }
+  .rules { background: var(--band); border-left: 3pt solid var(--accent); padding: 2.6mm 3.6mm; margin: 0; }
+  .rules ol { margin: 0; padding-left: 5mm; }
+  .rules li { margin: 0.6mm 0; }
+  ol.steps { margin: 0; padding-left: 6mm; }
+  ol.steps > li { margin: 1.1mm 0; }
+  b.k { font-weight: 700; }
+  code { font-family: Consolas, "Courier New", monospace; font-size: 9.4pt; background: #f2f2f2; padding: 0 1mm; border-radius: 1mm; }
+  td code { white-space: nowrap; }
+  table { width: 100%; border-collapse: collapse; font-size: 9.6pt; }
+  th, td { text-align: left; vertical-align: top; padding: 1.3mm 2mm; border-bottom: 0.6pt solid var(--line); }
+  th { font-weight: 700; background: #f4f4f4; border-bottom: 1pt solid var(--soft); }
+  table.compact th, table.compact td { padding: 0.8mm 2mm; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 6mm; }
+  .warn { color: var(--warn); font-weight: 700; }
+  .note { font-size: 9pt; color: var(--soft); margin-top: 2mm; }
+  footer { margin-top: 4mm; padding-top: 2mm; border-top: 0.8pt solid var(--line); font-size: 8.4pt; color: var(--soft); display: flex; justify-content: space-between; }
+  .small-qr { display: grid; grid-template-columns: 24mm 1fr; gap: 4mm; align-items: center; margin-top: 3mm; }
+  .small-qr img { width: 24mm; height: 24mm; }
+
+  /* Parte 2: instructivo con capturas */
+  .part-title { display: grid; grid-template-columns: 1fr 26mm; gap: 5mm; align-items: center; border-bottom: 2.2pt solid var(--ink); padding-bottom: 3mm; margin-bottom: 3.5mm; }
+  .part-title h1 { font-size: 19pt; margin: 0; }
+  .part-title p { margin: 1mm 0 0 0; color: var(--soft); font-size: 10pt; }
+  .part-title img { width: 26mm; height: 26mm; }
+  .step { break-inside: avoid; margin: 0 0 4.2mm 0; }
+  .step h3 { font-size: 12pt; margin: 0 0 1.4mm 0; display: flex; gap: 2.5mm; align-items: baseline; }
+  .step h3 .n { display: inline-block; min-width: 7mm; height: 7mm; line-height: 7mm; text-align: center; border-radius: 50%; background: var(--accent); color: #fff; font-size: 10.5pt; }
+  .step p { margin: 0 0 1.4mm 0; }
+  .step ul, .step ol { margin: 0 0 1.4mm 0; padding-left: 5.5mm; }
+  .step li { margin: 0.5mm 0; }
+  figure { margin: 1.5mm 0 0 0; }
+  figure img { display: block; max-width: 100%; width: auto; height: auto; max-height: var(--mh, 120mm); border: 0.7pt solid var(--line); border-radius: 1.5mm; }
+  figcaption { font-size: 8.6pt; color: var(--soft); margin-top: 1mm; }
+  .row { display: grid; gap: 4mm; align-items: start; }
+  .row.c2 { grid-template-columns: 1fr 1fr; }
+  .row.c3 { grid-template-columns: 1fr 1fr 1fr; }
+  .row.wide-left { grid-template-columns: 1.35fr 1fr; }
+  .tip { background: #fff7e6; border-left: 3pt solid #d98a00; padding: 1.8mm 3mm; font-size: 9.6pt; margin: 1.5mm 0; }
+  .stop { background: #fdecea; border-left: 3pt solid var(--warn); padding: 1.8mm 3mm; font-size: 9.6pt; margin: 1.5mm 0; }
+</style>
+</head>
+<body>
+
+<!-- ============================ HOJA 1: guía rápida ============================ -->
+<section class="page">
+  <header>
+    <div>
+      <h1>Weedo F192<br>Cómo imprimir</h1>
+      <p class="sub">Impresora 3D de doble boquilla · cama 280 × 200 mm · archivos <b>.x3g</b> desde tarjeta SD</p>
+      <p class="sub" style="margin-top:2mm">El software original de Weedo ya no existe. Este es el reemplazo: UltiMaker Cura con el perfil <b>WEEDO F192</b>. Las hojas 1 y 2 son para pegar al lado de la máquina; desde la hoja 3, la instalación paso a paso con capturas.</p>
+    </div>
+    <div class="qr">
+      <img src="qr-repositorio.svg" alt="QR al repositorio">
+      <div class="url">github.com/nik0793/weedo-f192</div>
+      <div class="cap">Manual completo, perfil de Cura, firmware y archivos de prueba</div>
+    </div>
+  </header>
+
+  <div class="rules">
+    <ol>
+      <li>Solo imprime archivos <b>.x3g</b> hechos con el perfil <b>WEEDO F192</b> de Cura. Otros .x3g hacen que <b>vuelva al menú</b>.</li>
+      <li>Tarjeta SD común de <b>2 GB o menos</b>, formato <b>FAT</b>, archivos sueltos en la raíz (no en carpetas). Cómo formatearla: hoja 2.</li>
+      <li><span class="warn">No conectes ReplicatorG ni MakerBot Desktop:</span> cambian la configuración interna y las piezas salen mal.</li>
+      <li>El filamento tiene que estar <b>cargado</b> (en la pantalla, <b>Ajustes → Cambiar filamento</b>) y pasar por el <b>sensor de filamento</b>; si no, la impresora se pausa sola.</li>
+    </ol>
+  </div>
+
+  <h2>Paso a paso</h2>
+  <ol class="steps">
+    <li><b class="k">Cura con el perfil.</b> Instalá UltiMaker Cura 5, abrilo y cerralo una vez, y ejecutá <code>cura/instalar-cura.bat</code> (se baja del QR). Agregá la impresora <b>WEEDO F192</b> (hoja 3).</li>
+    <li><b class="k">Abrí la pieza (.stl) y elegí la boquilla.</b> Extrusor 1 = <b>derecha</b>, extrusor 2 = <b>izquierda</b>: deshabilitá la que no usás con <b>Ajustes → Extrusor… → Deshabilitar extrusor</b> (hoja 5).</li>
+    <li><b class="k">Segmentá y guardá.</b> Con PLA el perfil ya trae los valores de la tabla (para ABS, hoja 5). Tocá <b>Segmentación</b> y después <b>Guardar en disco</b>; el tipo <b>X3G</b> ya viene elegido. Nombre corto, sin espacios ni acentos: <code>PIEZA1.x3g</code>. Si el botón dice <b>Guardar en unidad extraíble</b>, mirá la hoja 6.</li>
+    <li><b class="k">El archivo va a la raíz</b> de la tarjeta SD: guardalo ahí directo o copialo después.</li>
+    <li><b class="k">En la impresora:</b> tarjeta en la ranura → <b>Imprimir</b> → tocá el archivo.</li>
+    <li><b class="k">Al arrancar</b> busca su punto de partida (<i>home</i>): cabezal a la esquina y <b>al centro</b>, cama arriba hasta el sensor. Calienta, hace una línea de purga al frente y empieza. Para frenar: <b>Cancelar</b>.</li>
+  </ol>
+
+  <h2>Valores de partida (filamento 1,75 mm)</h2>
+  <table class="compact">
+    <tr><th></th><th>PLA</th><th>ABS</th></tr>
+    <tr><td>Boquilla / cama</td><td>200 °C / 60 °C</td><td>230 °C / 100 °C</td></tr>
+    <tr><td>Capa · paredes · relleno</td><td>0,2 mm (Draft) · 0,8 mm · 15–20 %</td><td>0,2 mm (Draft) · 0,8 mm · 15–20 %</td></tr>
+    <tr><td>Velocidad · primera capa</td><td>40–50 mm/s · 20–25 mm/s</td><td>40 mm/s · 20 mm/s</td></tr>
+    <tr><td>Adherencia · ventilador</td><td>Borde (brim) · 100 % desde la capa 2</td><td>Balsa o borde · apagado, puerta cerrada</td></tr>
+    <tr><td>Retracción</td><td colspan="2">1–1,5 mm a 25 mm/s</td></tr>
+  </table>
+  <p class="note">Con la boquilla izquierda el cabezal se corre 35 mm a la derecha: no pongas piezas en los últimos 4 cm del borde <b>derecho</b> de la cama (mirando la impresora de frente; en Cura, el borde derecho de la placa). Doble color (dos boquillas a la vez): todavía sin calibrar.</p>
+  <p class="note"><b>Palabras:</b> <b>extrusor</b> = boquilla con su motor de filamento · <b>segmentar</b> = pasar la pieza (.stl) al archivo de la máquina (.x3g) · <b>home</b> = punto de partida que busca sola · <b>purga</b> = línea de prueba al frente.</p>
+
+  <footer><span>Guía Weedo F192 · hoja 1</span><span>© 2026 nik0793 · texto CC BY-SA 4.0</span></footer>
+</section>
+
+<!-- ============================ HOJA 2: problemas ============================ -->
+<section class="page">
+  <h2 style="margin-top:0">Si algo falla</h2>
+  <table style="font-size:9.2pt">
+    <tr><th style="width:24%">Síntoma</th><th style="width:25%">Causa</th><th>Qué hacer</th></tr>
+    <tr><td>Al elegir el archivo <b>vuelve al menú</b> principal</td><td>El .x3g no tiene la marca que exige el firmware de Weedo, o la configuración interna fue cambiada (típico tras conectar ReplicatorG)</td><td>Generarlo con el perfil WEEDO F192 de este repositorio. Si también pasa con <code>pruebas/MOVIM.X3G</code>, revisar la configuración interna (fila "Piezas a mitad de altura").</td></tr>
+    <tr><td>La lista de la tarjeta está vacía o no la lee</td><td>Tarjeta grande o formato FAT32/exFAT</td><td>SD de 2 GB o menos en <b>FAT</b>. Para formatearla en Windows: clic derecho sobre la tarjeta → <b>Formatear…</b> → Sistema de archivos <b>FAT</b> (no FAT32 ni exFAT) → <b>Iniciar</b>. <span class="warn">Borra todo lo que tenga.</span> Los .x3g van sueltos en la raíz.</td></tr>
+    <tr><td>En el home la cama <b>sube sin frenar</b> y el motor fuerza</td><td>El sensor de Z (va en el carro) no detecta</td><td><b>Apagá la impresora enseguida</b>: la cama sigue empujando hasta 20 s y puede golpear la boquilla. El home de Z se hace con el cabezal en el centro (el perfil lo hace). Revisar el cable del sensor y el conector Z-MIN.</td></tr>
+    <tr><td>La cama baja cuando debería subir, o el motor Z vibra</td><td>Cable del motor Z cortado o flojo</td><td>Medir las dos bobinas del motor Z en el conector de la placa.</td></tr>
+    <tr><td>Se pausa sola al principio</td><td>El sensor no detecta filamento</td><td>Pasar el filamento por el sensor; revisar su cable. Si el sensor está roto, se puede desactivar en <b>Configuracion → Función avanzada</b> (según el manual de Weedo).</td></tr>
+    <tr><td>Imprime con la boquilla equivocada</td><td>Extrusor asignado en Cura</td><td>Deshabilitá la que no usás (hoja 5, paso 5). Extrusor 1 = derecha, 2 = izquierda.</td></tr>
+    <tr><td>Piezas a mitad de altura, aplastadas o con extrusión rara</td><td>Configuración interna cambiada (típico tras conectar ReplicatorG)</td><td>Con la impresora encendida y conectada por USB (Cura y ReplicatorG cerrados), doble clic en <code>eeprom/verificar-eeprom.bat</code>. Si alguna zona dice <b>DISTINTO</b>, doble clic en <code>eeprom/restaurar-eeprom.bat</code>, escribí SI y después apagá y prendé la impresora.</td></tr>
+    <tr><td>Pronterface u OctoPrint no conectan</td><td>Usa protocolo binario (s3g), no G-code</td><td>Imprimir desde la SD.</td></tr>
+  </table>
+
+  <div class="two" style="margin-top:4mm">
+    <div>
+      <h2>Nivelar la cama</h2>
+      <p style="margin:0">En la pantalla: <b>Ajustes</b> (el botón con la llave) → <b>Nivelar plato de impresión</b>, y seguí las indicaciones. En cada punto, girá la perilla de la cama hasta que suene el aviso (así lo indica el manual de Weedo) o hasta que una hoja de papel pase entre la boquilla y la cama con un leve roce. Hacé la vuelta completa dos veces.</p>
+    </div>
+    <div>
+      <h2>Configuración y firmware</h2>
+      <p style="margin:0">La carpeta <code>eeprom/</code> revisa y restaura la configuración de fábrica por USB. La carpeta <code>firmware/</code> tiene el firmware original, solo para rescates. <span class="warn">No grabes el firmware "F192C" de internet</span>: es para otra variante. El botón "Actualizar firmware" de Cura no sirve para esta máquina.</p>
+    </div>
+  </div>
+
+  <div class="small-qr">
+    <img src="qr-repositorio.svg" alt="QR al repositorio">
+    <div><b>Todo en github.com/nik0793/weedo-f192</b> (botón verde <i>Code → Download ZIP</i>): manual, perfil de Cura con instalador, firmware original, configuración de fábrica y notas técnicas. <b>Archivos de prueba</b> en <code>pruebas/</code>: <code>MOVIM.X3G</code> comprueba el home sin calentar; <code>DADO_D.X3G</code> y <code>DADO_I.X3G</code> imprimen un cubo de 20 mm con la boquilla derecha o la izquierda (unos 22 minutos); <code>cubo_20mm.stl</code> es para practicar en Cura.</div>
+  </div>
+
+  <footer><span>Guía Weedo F192 · hoja 2</span><span>Hecho por y para escuelas técnicas · 2026</span></footer>
+</section>
+
+<!-- ============================ HOJA 3: instalar Cura y el perfil ============================ -->
+<section class="page">
+  <div class="part-title">
+    <div>
+      <h1>Instalar y configurar Cura paso a paso</h1>
+      <p>Una sola vez por computadora, con Windows. Capturas de UltiMaker Cura 5.12 en castellano; entre paréntesis, el nombre en inglés.</p>
+    </div>
+    <img src="qr-repositorio.svg" alt="QR al repositorio">
+  </div>
+
+  <div class="step">
+    <h3><span class="n">1</span>Instalar UltiMaker Cura</h3>
+    <div class="row wide-left">
+      <div>
+        <p>Descargá <b>UltiMaker Cura 5</b> de <code>ultimaker.com/software/ultimaker-cura</code> e instalalo con las opciones que vienen marcadas.</p>
+        <p>Abrilo una vez. Aparece un asistente, casi siempre <b>en inglés</b>: Cura arranca así aunque Windows esté en castellano, y el idioma se cambia al final del paso 3.</p>
+        <ol>
+          <li><i>Get started</i> (Empezar) → <b>Agree</b> (Estoy de acuerdo) → <i>Next</i> (Siguiente).</li>
+          <li>En <i>Sign in to the UltiMaker platform</i> (Inicie sesión) tocá <b>Skip</b> (Omitir). No hace falta una cuenta.</li>
+          <li>Cuando llegues a <b>Add printer</b> (Agregar impresora), <b>cerrá Cura</b> con la X. Todavía falta instalar el perfil.</li>
+        </ol>
+      </div>
+      <figure style="--mh:62mm"><img src="img/01-omitir-sesion.png" alt="Omitir inicio de sesión"><figcaption>En "Inicie sesión" (<i>Sign in</i>), tocá Omitir (<i>Skip</i>).</figcaption></figure>
+    </div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">2</span>Instalar el perfil WEEDO F192 y el complemento X3G</h3>
+    <div class="row c2">
+      <div>
+        <ol>
+          <li>Bajá el repositorio: en github.com/nik0793/weedo-f192, botón verde <b>Code → Download ZIP</b>. En <i>Descargas</i>, clic derecho en el ZIP → <b>Extraer todo</b> → <b>Extraer</b>.</li>
+          <li>Con Cura <b>cerrado</b>, entrá a <code>weedo-f192-main</code> (si adentro hay otra con el mismo nombre, entrá también) → <code>cura</code> y hacé <b>doble clic en <code>instalar-cura</code></b>, el que tiene el ícono de engranajes. No lo abras desde adentro del ZIP sin extraer: falla.</li>
+          <li>Si Windows avisa <i>"Windows protegió su PC"</i>: <b>Más información → Ejecutar de todas formas</b>.</li>
+          <li>La ventana negra confirma lo instalado. Tocá una tecla para cerrarla.</li>
+        </ol>
+        <div class="stop">No instales ni actualices <b>X3GWriter</b> desde el Marketplace de Cura: se pierden los cambios que necesita la F192.</div>
+      </div>
+      <figure style="--mh:52mm"><img src="img/02-carpeta-cura.png" alt="Carpeta cura con instalar-cura"><figcaption>Carpeta <code>cura</code> ya extraída (la ruta puede repetir <code>weedo-f192-main</code>).</figcaption></figure>
+    </div>
+    <figure style="--mh:34mm"><img src="img/03-instalador.png" alt="Ventana del instalador"><figcaption>Resultado del instalador: perfil, dos boquillas y complemento copiados.</figcaption></figure>
+  </div>
+
+  <footer><span>Guía Weedo F192 · hoja 3</span><span>github.com/nik0793/weedo-f192</span></footer>
+</section>
+
+<!-- ============================ HOJA 4: agregar impresora y boquillas ============================ -->
+<section class="page">
+  <div class="step">
+    <h3><span class="n">3</span>Agregar la impresora</h3>
+    <p>Abrí Cura. Si aparece el asistente, seguí desde <b>Agregar impresora</b> (<i>Add printer</i>). Si no: <b>Preferencias → Configurar Cura... → Impresoras → Añadir nuevo</b>.</p>
+    <div class="row c2">
+      <figure style="--mh:72mm"><img src="img/04-no-ultimaker.png" alt="Impresoras no UltiMaker"><figcaption>Elegí <b>Impresoras no UltiMaker</b> (<i>Non UltiMaker printer</i>).</figcaption></figure>
+      <figure style="--mh:72mm"><img src="img/05-elegir-f192.png" alt="Elegir WEEDO F192"><figcaption>Abrí <b>Agregar una impresora fuera de red</b> (<i>Add a non-networked printer</i>), buscá <b>weedo</b> (1), marcá <b>WEEDO F192</b> (2) y tocá <b>Agregar</b> (<i>Add</i>), abajo a la derecha (3).</figcaption></figure>
+    </div>
+    <div class="stop">Elegí <b>WEEDO F192</b>. Cura trae de fábrica otras Weedo (F150S, F152S, TINA2…): son otras máquinas y no funcionan con la F192.</div>
+    <p>Si después aparecen las pantallas de <i>Novedades</i> (<i>What's New</i>), tocá <b>Omitir</b> (<i>Skip</i>) y <b>Finalizar</b> (<i>Finish</i>).</p>
+    <div class="row wide-left">
+      <div class="tip" style="margin:0">Si Cura quedó en inglés, cambialo ahora: <i>Preferences → Configure Cura... → General → Language*</i> → <b>Español</b>. Cerrá Cura y volvé a abrirlo. Desde acá la guía usa los menús en castellano.</div>
+      <figure style="margin:0"><img src="img/15-idioma.png" alt="Idioma de Cura"><figcaption><i>Language*</i> no se traduce: se ve igual en los dos idiomas.</figcaption></figure>
+    </div>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">4</span>La pantalla principal</h3>
+    <figure style="--mh:84mm"><img src="img/06-principal.png" alt="Pantalla principal de Cura"><figcaption>Arriba a la izquierda, la impresora <b>WEEDO F192</b>. Al lado, las dos boquillas: <b>1 = derecha</b>, <b>2 = izquierda</b>, cada una con su material. La calidad arranca en <b>Draft 0,2 mm</b>.</figcaption></figure>
+  </div>
+
+  <footer><span>Guía Weedo F192 · hoja 4</span><span>github.com/nik0793/weedo-f192</span></footer>
+</section>
+
+<!-- ============================ HOJA 5: boquilla y ajustes ============================ -->
+<section class="page">
+  <div class="step">
+    <h3><span class="n">5</span>Elegir con qué boquilla imprimir</h3>
+    <div class="row c2">
+      <div>
+        <p><b>Una boquilla por impresión: deshabilitá la que no usás.</b> Para la <b>derecha (1)</b>: <b>Ajustes → Extrusor izquierdo (T1) → Deshabilitar extrusor</b>. Para la <b>izquierda (2)</b>: <b>Ajustes → Extrusor derecho (T0) → Deshabilitar extrusor</b>. La deshabilitada se ve gris en la barra de arriba. Cura recuerda el ajuste para el próximo que use la PC: fijate antes de segmentar.</p>
+        <figure><img src="img/07-deshabilitar.png" alt="Deshabilitar extrusor"></figure>
+      </div>
+      <div>
+        <p>Si la pieza había quedado en la boquilla que deshabilitaste, se ve rayada y Cura avisa <b>No se puede segmentar</b>. No toques <i>Habilitar los extrusores requeridos</i>: clic derecho sobre la pieza → <b>Imprimir modelo seleccionado con</b> → la habilitada (o Ctrl+1 / Ctrl+2).</p>
+        <figure><img src="img/08-asignar.png" alt="Asignar pieza a una boquilla"></figure>
+      </div>
+    </div>
+    <p class="note"><b>No dejes las dos habilitadas:</b> aunque la pieza esté asignada a la izquierda, la <b>balsa</b> sale con la derecha y la impresión pasa a usar las dos boquillas, algo que todavía no está calibrado. Si Cura avisa <i>Extrusor(es) no usado(s)</i>, tocá <b>Desactivar extrusor(es) no usado(s)</b>. El perfil calienta y purga solo la boquilla que se usa y deja la otra apagada. Con la izquierda, no pongas piezas en los últimos 4 cm del borde <b>derecho</b> de la placa (Cura no marca esa franja).</p>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">6</span>Ajustes de impresión</h3>
+    <div class="row c2">
+      <div>
+        <p>Cargá la pieza, un archivo <b>.stl</b> (ícono de carpeta, arriba a la izquierda; para practicar, <code>pruebas/cubo_20mm.stl</code>), y tocá la barra de calidad, arriba a la derecha.</p>
+        <p><b>Recomendado:</b> Resolución <b>Draft – 0,2 mm</b>, relleno 15–20 %, <b>Soporte</b> solo si la pieza tiene partes en el aire, <b>Adherencia</b> activada.</p>
+        <figure style="--mh:78mm"><img src="img/09-recomendado.png" alt="Ajustes recomendados"></figure>
+      </div>
+      <div>
+        <p>Para ver o cambiar temperaturas: <b>Mostrar personalización</b> → pestaña de la boquilla que usás (<b>1</b> = derecha, <b>2</b> = izquierda; la deshabilitada se ve gris) → <b>Material</b>. <b>PLA:</b> el perfil ya trae 200 °C y cama 60 °C; no hay que tocar nada.</p>
+        <figure style="--mh:84mm"><img src="img/10-material.png" alt="Temperaturas en ajustes personalizados"></figure>
+      </div>
+    </div>
+    <div class="tip"><b>ABS:</b> (1) <b>Ajustes → Extrusor… → Material → Genérico → ABS</b>. (2) En <b>Mostrar personalización</b>, pestaña de esa boquilla: <b>Material</b> → Temperatura de impresión <b>230</b> y Temperatura de la placa de impresión <b>100</b>; <b>Refrigeración</b> → desmarcá <b>Activar refrigeración de impresión</b>; si la pieza se despega, <b>Adherencia de la placa de impresión → Tipo adherencia de la placa de impresión → Balsa</b>. Imprimí con la puerta cerrada.</div>
+  </div>
+
+  <footer><span>Guía Weedo F192 · hoja 5</span><span>github.com/nik0793/weedo-f192</span></footer>
+</section>
+
+<!-- ============================ HOJA 6: guardar e imprimir ============================ -->
+<section class="page">
+  <div class="step">
+    <h3><span class="n">7</span>Guardar el archivo para la tarjeta</h3>
+    <div class="row c2">
+      <div>
+        <p>Tocá <b>Segmentación</b>. Cuando termine, muestra el tiempo y el filamento. Tocá <b>Guardar en disco</b>.</p>
+        <figure><img src="img/11-guardar-en-disco.png" alt="Guardar en disco"></figure>
+      </div>
+      <div>
+        <p>En la ventana de guardar, el <b>Tipo</b> ya dice <b>X3G File (*.x3g)</b>. Poné un nombre corto sin espacios ni acentos y guardalo en la raíz de la tarjeta SD, no dentro de una carpeta. Cura agrega <code>WF_</code> adelante del nombre; se puede borrar.</p>
+        <figure><img src="img/12-tipo-x3g.png" alt="Tipo X3G"></figure>
+      </div>
+    </div>
+    <p class="note">Si la tarjeta ya está puesta en la PC, el botón dice <b>Guardar en unidad extraíble</b>: graba directo en la raíz de la tarjeta, sin ventana, con el nombre que se ve abajo a la izquierda, junto al lápiz (por ejemplo <code>WF_cubo_20mm</code>). Antes, hacé clic en ese nombre y acortalo; o tocá la flechita del botón y elegí <b>Guardar en disco</b>.</p>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">8</span>Imprimir en la máquina</h3>
+    <div class="row c3">
+      <figure><img src="img/20-pantalla-menu.jpg" alt="Menú principal de la impresora"><figcaption>Tarjeta en la ranura → <b>Imprimir</b>.</figcaption></figure>
+      <figure><img src="img/21-pantalla-sd.jpg" alt="Lista de la tarjeta SD"><figcaption>Tocá el archivo en la lista de la tarjeta.</figcaption></figure>
+      <figure><img src="img/22-pantalla-imprimiendo.jpg" alt="Imprimiendo"><figcaption>Calienta y arranca. <b>Cancelar</b> y <b>Pausa</b> abajo.</figcaption></figure>
+    </div>
+    <p class="note"><b>Antes de empezar:</b> el filamento tiene que estar cargado en la boquilla que elegiste en Cura y pasar por el <b>sensor de filamento</b>. Para cargarlo: <b>Ajustes → Cambiar filamento</b> y la opción de cargar en la boquilla derecha o izquierda; la boquilla se calienta y el motor lo empuja (nombres según el manual de Weedo). Si al tocar el archivo vuelve al menú, el .x3g no se hizo con este perfil o la configuración interna fue cambiada (hoja 2).</p>
+  </div>
+
+  <div class="step">
+    <h3><span class="n">9</span>Qué no tocar en Cura</h3>
+    <div class="row c2">
+      <div>
+        <figure style="--mh:34mm"><img src="img/13-impresoras.png" alt="Preferencias, impresoras"><figcaption>Preferencias → Configurar Cura... → Impresoras: <b>"Actualizar firmware" no sirve para la F192</b> (Cura no puede grabarla). Para rescates está la carpeta <code>firmware/</code>.</figcaption></figure>
+        <figure style="--mh:66mm"><img src="img/14-maquina.png" alt="Ajustes de la máquina"><figcaption>Preferencias → Configurar Cura... → Impresoras → WEEDO F192 → <b>Ajustes de la máquina</b>: el inicio de impresión (recuadro) no se toca.</figcaption></figure>
+      </div>
+      <div>
+        <p>En <b>Ajustes de la máquina</b> están el tamaño de cama y el <b>inicio de impresión</b>, que hace el home de Z con el cabezal en el centro y elige la boquilla. <b>No los cambies.</b> Si alguien los cambió, reinstalar no alcanza: Cura guarda el cambio en la impresora agregada. Agregá otra <b>WEEDO F192</b> (paso 3; queda con otro nombre, por ejemplo <i>WEEDO F192 #2</i>) y después, en <b>Preferencias → Configurar Cura... → Impresoras</b>, elegí la vieja → menú <b>☰ → Eliminar</b>. <code>instalar-cura.bat</code> solo hace falta si se tocó el complemento X3G (por ejemplo, desde el Marketplace).</p>
+      </div>
+    </div>
+  </div>
+
+  <footer><span>Guía Weedo F192 · hoja 6</span><span>github.com/nik0793/weedo-f192</span></footer>
+</section>
+
+</body>
+</html>

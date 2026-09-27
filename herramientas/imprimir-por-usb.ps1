@@ -1,5 +1,7 @@
 # Imprime un archivo .x3g mandandolo por el cable USB (como hacia ReplicatorG), sin usar la tarjeta SD.
-# La PC tiene que quedar encendida y conectada durante TODA la impresion: si se corta el cable o se apaga la PC, la impresion queda a medias.
+# La PC tiene que quedar encendida y conectada durante TODA la impresion. Si el script se corta por un error o con Ctrl+C, intenta
+# cancelar el trabajo. Si se cierra la ventana o se desconecta el cable, la impresora queda con la boquilla y la cama calientes:
+# cancelar desde la pantalla o con "estado-impresora.ps1 -Cancelar".
 #   powershell -ExecutionPolicy Bypass -File imprimir-por-usb.ps1 -Archivo ..\pruebas\MOVIM.X3G
 param([Parameter(Mandatory = $true)][string]$Archivo, [string]$Port = "")
 $ErrorActionPreference = "Stop"
@@ -21,7 +23,7 @@ Write-Host ("{0}: {1} ordenes" -f $Archivo, $ordenes.Count)
 
 $sp = Open-Impresora $Port
 $sp.ReadTimeout = 5000
-$enviadas = 0; $inicio = Get-Date
+$enviadas = 0; $inicio = Get-Date; $terminado = $false
 try {
   foreach ($o in $ordenes) {
     if ($o[0] -eq 157) { continue }   # la cabecera 157 solo la exige la lectura desde SD
@@ -35,5 +37,13 @@ try {
     $enviadas++
     if (($enviadas % 1000) -eq 0) { Write-Host ("  {0}/{1} ordenes ({2:n0} min)" -f $enviadas, $ordenes.Count, ((Get-Date) - $inicio).TotalMinutes) }
   }
+  $terminado = $true
   Write-Host ("LISTO: {0} ordenes enviadas. La impresora termina de ejecutar las ultimas que tiene en memoria." -f $enviadas)
-} finally { $sp.Close() }
+} finally {
+  if (-not $terminado) {
+    # Error o Ctrl+C a mitad de camino: sin esto la impresora queda con la boquilla y la cama calientes
+    Write-Host "Se corto el envio: mando la orden de cancelar a la impresora (apaga calefactores)."
+    try { $null = Send-S3g $sp ([byte[]](7)) } catch { Write-Host "No se pudo cancelar por USB: apreta Cancelar en la pantalla de la impresora o apagala." }
+  }
+  $sp.Close()
+}
